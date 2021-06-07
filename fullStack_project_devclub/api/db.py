@@ -38,4 +38,15 @@ class SQLiteConnection:
         );"""
         self.execute_command(command)
 
-# TODO
+    def save_to_favorites(self, movie: dict):
+        values = (movie['movie_title'], movie['imdbID'])
+        command = f"""INSERT INTO add_to_favorites
+                  (title, imdbID) 
+                   VALUES
+                  {values}"""
+        self.execute_command(command)
+
+    def get_list_of_favorites(self) -> List[Dict]:
+        command = f"""SELECT imdbID, title FROM add_to_favorites;"""
+        fetchall = self.execute_command(command, True)
+        return [{"imdbID": row[0], "title": row[1]} for row in fetchall]
